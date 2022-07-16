@@ -1,6 +1,5 @@
 /* Do not change, this code is generated from Golang structs */
 
-
 export class Feed {
     url: string;
     title: string;
@@ -11,6 +10,7 @@ export class Feed {
         this.title = source["title"];
     }
 }
+
 export class Event {
     user_id: string;
     feeds: Feed[];

@@ -6,13 +6,15 @@ import (
 	"github.com/tkrajina/typescriptify-golang-structs/typescriptify"
 )
 
-func CreateTypes() {
+func CreateTypes(p string) {
 	converter := typescriptify.New().
 		Add(Feed{}).
 		Add(Event{}).
 		Add(PostContent{})
 
-	err := converter.ConvertToFile("../shared/types.ts")
+	converter.CreateInterface = true
+
+	err := converter.ConvertToFile(p)
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -8,12 +8,12 @@ import (
 
 func main() {
 
-	handler.CreateTypes()
+	handler.CreateTypes("./../frontend/src/types/server.ts")
 
 	// HTML Server with Router to Functions
 	http.HandleFunc("/subscriptions/add", handler.AddSubscriptionHandler)
 	http.HandleFunc("/subscriptions/remove", handler.RemoveSubscriptionHandler)
-	// http.HandleFunc("/reading-list/generate", ListSubscriptionsHandler)
+	http.HandleFunc("/posts/read", handler.GetPostTextHandler)
 
 	// Start Server
 	http.ListenAndServe(":8080", nil)

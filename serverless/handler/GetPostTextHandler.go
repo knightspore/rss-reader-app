@@ -2,12 +2,13 @@ package handler
 
 import (
 	"fmt"
+	"net/http"
 	"time"
 
 	readability "github.com/go-shiori/go-readability"
 )
 
-func main() {
+func GetPostTextHandler(w http.ResponseWriter, r *http.Request) {
 
 	url := "https://www.thelegalartist.com/blog/on-bill-wattersons-refusal-to-license-calvin-and-hobbes"
 
@@ -25,15 +26,8 @@ func main() {
 		Favicon: readable.Favicon,
 	}
 
-	fmt.Println(post.Title)
-	fmt.Println("")
-	fmt.Println(post.Byline)
-	fmt.Println("")
-	fmt.Println(post.Site)
-	fmt.Println("")
-	fmt.Println(post.Favicon)
-	fmt.Println("")
-	fmt.Println("")
-	fmt.Println(post.Text)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("%v", post)))
 
 }
