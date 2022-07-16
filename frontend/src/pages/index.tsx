@@ -18,7 +18,7 @@ const Home: NextPage = () => {
       {event.feeds.map((feed) => {
         return (
           <div key={feed.url}>
-            <a href={"#"+feed.url}>{feed.title}</a>
+            <a href={"#" + feed.url}>{feed.title}</a>
           </div>
         );
       })}
