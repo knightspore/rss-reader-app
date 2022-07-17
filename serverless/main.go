@@ -13,7 +13,7 @@ func main() {
 	// HTML Server with Router to Functions
 	http.HandleFunc("/subscriptions/add", handler.AddSubscriptionHandler)
 	http.HandleFunc("/subscriptions/remove", handler.RemoveSubscriptionHandler)
-	http.HandleFunc("/posts/read", handler.GetPostTextHandler)
+	http.HandleFunc("/posts/read", handler.GetPostTextHandler) // TODO: Complete Setup & Test
 
 	// Start Server
 	http.ListenAndServe(":8080", nil)

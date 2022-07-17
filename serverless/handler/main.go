@@ -9,7 +9,8 @@ type Feed struct {
 
 type Event struct {
 	UserID string `json:"user_id"`
-	Feeds  []Feed `json:"feeds"`
+	Feeds  []Feed `json:"feeds,omitempty"`
+	ReadPostUrl string `json:"read_post_url,omitempty"`
 }
 
 type PostContent struct {
@@ -18,4 +19,5 @@ type PostContent struct {
 	Site    string `json:"site"`
 	Text    string `json:"text"`
 	Favicon string `json:"favicon"`
+	URL 		string `json:"url"`
 }

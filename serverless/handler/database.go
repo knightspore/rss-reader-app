@@ -11,6 +11,7 @@ func printDB() {
 }
 
 func AddSubscription(e *Event) {
+	// TODO: Handle "If doesn't already exist"
 	if _, ok := in_mem_db[User(e.UserID)]; ok {
 		in_mem_db[User(e.UserID)] = append(in_mem_db[User(e.UserID)], e.Feeds...)
 	} else {
