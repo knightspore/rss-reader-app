@@ -5,13 +5,12 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-
-  const [queryClient] = useState(() => new QueryClient())
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
+        <Component {...pageProps} />
       </QueryClientProvider>
     </SessionProvider>
   );

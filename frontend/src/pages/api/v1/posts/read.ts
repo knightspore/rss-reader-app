@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const server: AxiosResponse = await axios.post(api.posts.read, event);
-    server.status == 200 ? res.send(server.data) : res.send(500);
+    server.status == 200 ? res.json(server.data) : res.send(500);
   } catch (e) {
     console.warn("Error Getting Read Post Text");
     console.error(e.message);
