@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 
 const Post = ({ event }: Event) => {
+
   const [content, setContent] = useState(null);
 
   const { isLoading, error } = useQuery(["readPostContent"], () => {

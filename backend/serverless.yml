@@ -1,0 +1,20 @@
+service: serverless
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: go1.x
+  region: af-south-1
+
+package:
+  patterns:
+    - '!./**'
+    - ./bin/**
+
+functions:
+  add_subscription:
+    handler: bin/add_subscription
+    events:
+      - httpApi:
+          path: /add_subscription
+          method: get
