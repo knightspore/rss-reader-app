@@ -15,22 +15,17 @@ type Article struct {
 	Read bool `json:"read"`
 }
 
-func (a *Article) getContent() (string, error) {
+func (a *Article) Read() (string, error) {
 	data, err :=	Network.Fetch(a.URL)
 	if err != nil  {
 		return "Error Fetching Article Content", err
 	}
-	return string(data), err
-}
 
-func (a *Article) Markdown() (string, error) {
-	data, err := a.getContent()
+	converter := md.NewConverter("", true, nil)
+	markdown, err := converter.ConvertString(string(data))
 	if err != nil {
 		return "Error Convering Article to Markdown", err
 	}
-
-	converter := md.NewConverter("", true, nil)
-	markdown, err := converter.ConvertString(data)
 
 	return markdown, err
 }

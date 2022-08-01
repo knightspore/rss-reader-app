@@ -17,19 +17,20 @@ type Event struct {
 func Handler(request events.APIGatewayProxyRequest) (Response, error) {
 
 		e := Event{URL: request.Body}
-		s, err := subscription.Create(e.URL)
-
+		s := NewSubscription(e.URL, e.Title)
+		
 		if err != nil {
+			fmt.Printf("Error Unmarshaling XML: %s", url)
 			return Response{
 				StatusCode: 500,
 			}, nil
 		}
 
 		fmt.Printf("Created Subscription: %s", s.Title)
-
 		return Response{
-			StatusCode: 200,
+			Body: json.NewEncoder.Encode(s),
 		}, nil
+
 }
 
 func main() {
