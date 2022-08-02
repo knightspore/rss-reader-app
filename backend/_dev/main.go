@@ -38,8 +38,11 @@ func main() {
 		}
 	}
 
-	for _, sub := range subs {
-		fmt.Println(sub.Title)
-	}
+	var user vo.User
+	user.ID = "0001"
+	user.Subscriptions = append(user.Subscriptions, subs)
+
+	fmt.Println(user.ReadingList[:10])
+	fmt.Printf("Last Updated At: "%s time.Now())
 
 }

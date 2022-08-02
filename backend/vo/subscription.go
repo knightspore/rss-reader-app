@@ -12,6 +12,7 @@ type Subscription struct {
 }
 
 func NewSubscription(url, title) *Subscription {
+
 	data, err := Network.Fetch(url)
 	if err != nil {
 		fmt.Printf("Error Fetching Feed URL: %s", url)
@@ -30,6 +31,26 @@ func NewSubscription(url, title) *Subscription {
 	}
 
 	return &s
+
+}
+
+func (s *Subscription) LatestArticles() *[]Article {
+
+	data, err := Network.Fetch(s.URL)
+	if err != nil {
+		fmt.Printf("Error Fetching Feed URL: %s", url)
+	}
+
+	var a []Article
+	err = xml.Unmarshal(data, &a)
+
+	if err != nil {
+		fmt.Printf("Error UnMarhshaling XML: %s", url)
+	}
+
+	// TODO: Only return NEW Articles
+
+	return &a
 
 }
 
