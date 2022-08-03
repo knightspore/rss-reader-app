@@ -1,5 +1,12 @@
 package vo
 
+import (
+	"encoding/xml"
+	"fmt"
+
+	"github.com/knightspore/rss-reader-app/backend/module/Network"
+)
+
 type Subscription struct {
 	ID string `xml:"channel>id" json:"id"`
 	Title string `xml:"channel>title" json:"title"`
@@ -11,15 +18,15 @@ type Subscription struct {
 	Articles []Article `xml:"channel>item" json:"articles"`
 }
 
-func NewSubscription(url, title) *Subscription {
+func NewSubscription(url string, title string) (Subscription, error) {
 
 	data, err := Network.Fetch(url)
 	if err != nil {
 		fmt.Printf("Error Fetching Feed URL: %s", url)
-		return vo.Subscription{}, err	
+		return Subscription{}, err	
 	}
 
-	var s vo.Subscription
+	var s Subscription
 	err = xml.Unmarshal(data, &s)
 
 	if err != nil {
@@ -30,7 +37,15 @@ func NewSubscription(url, title) *Subscription {
 		s.Title = title
 	}
 
-	return &s
+	if len(s.ID) == 0 {
+		s.ID = url
+	}
+
+	for _, a := range s.Articles {
+		a.Parent = s.ID
+	}
+
+	return s, err
 
 }
 
@@ -38,14 +53,14 @@ func (s *Subscription) LatestArticles() *[]Article {
 
 	data, err := Network.Fetch(s.URL)
 	if err != nil {
-		fmt.Printf("Error Fetching Feed URL: %s", url)
+		fmt.Printf("Error Fetching Feed URL: %s", s.URL)
 	}
 
 	var a []Article
 	err = xml.Unmarshal(data, &a)
 
 	if err != nil {
-		fmt.Printf("Error UnMarhshaling XML: %s", url)
+		fmt.Printf("Error UnMarhshaling XML: %s", s.URL)
 	}
 
 	// TODO: Only return NEW Articles

@@ -12,7 +12,8 @@ type Article struct {
 	Description string `xml:"description" json:"description"`
 	Content string `xml:"content" json:"content"`
 	URL string `xml:"link" json:"url"`
-	Read bool `json:"read"`
+	IsRead bool `json:"read"`
+	Parent string `json:"parent"`
 }
 
 func (a *Article) Read() (string, error) {

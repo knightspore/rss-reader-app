@@ -13,17 +13,14 @@ type User struct {
 
 func (u *User) RefreshReadingList() {
 
-	l := []Article
-
 	for _, s := range(u.Subscriptions) {
 		for _, a := range(s.Articles) {
 			if true { // TODO: If not in reading list
-				l = append(l, a)
+				u.ReadingList = append(u.ReadingList, a)
 			}
 		}
 	}
 
-	u.ReadingList = append(u.ReadingList, l)
-	u.LastUpdated = time.Now()
+	u.LastUpdated = time.Now().String()
 
 }

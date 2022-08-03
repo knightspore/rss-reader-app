@@ -1,48 +1,72 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+	"time"
 
-	subscription "github.com/knightspore/rss-reader-app/backend/module/Subscription"
 	"github.com/knightspore/rss-reader-app/backend/vo"
 )
 
+// Dev Setup
+
+var urls = [3]string{
+	"https://flaviocopes.com/index.xml",
+	"https://www.emgoto.com/rss.xml",
+	"https://kentcdodds.com/blog/rss.xml",
+}
+
+var user vo.User
+
 func main() {
 
-	urls := [15]string{
-		"http://techcrunch.com/feed/",
-		"https://www.wired.com/feed/category/backchannel/latest/rss",
-		"https://www.protocol.com/feeds/feed.rss",
-		"https://timdaub.github.io/atom.xml",
-		"https://flaviocopes.com/index.xml",
-		"https://www.emgoto.com/rss.xml",
-		"https://kentcdodds.com/blog/rss.xml",
-		"https://steve-yegge.blogspot.com/atom.xml",
-		"https://jovicailic.org/feed/",
-		"https://machinelearningmastery.com/feed/",
-		"http://lesswrong.com/.rss",
-		"https://www.bellingcat.com/feed",
-		"https://twobithistory.org/feed.xml",
-		"https://ciaran.co.za/rss.xml",
-		"https://news.ycombinator.com/rss",
+	// Set Username
+	UserNameSetup()
+	AddTestArticles()
+
+	list := getItem(0,4)
+
+	for i, item := range list {
+		content, err := item.Read()
+		if err != nil {
+			content = "Couldn't Read Article Content"
+		}
+		
+		fmt.Println(">>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+		fmt.Println("|")
+		fmt.Println("|  \033[1m" + item.Title + "\033[0m")
+		fmt.Println("|  " + item.URL)
+		fmt.Println("|")
+		if (i == 0) {
+		fmt.Println(content)
+		fmt.Println("|")
+		}
+		fmt.Println("* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+
 	}
 
-	var subs []vo.Subscription
+}
 
+func getItem(n,m int) []vo.Article {
+	return user.ReadingList[n:m]
+}
+
+func UserNameSetup() {
+	uuid := flag.String("n", "neo", "user name")
+	flag.Parse()
+	user.ID = *uuid
+}
+
+func AddTestArticles() {
 	for _, url := range urls {
-		s, err := subscription.Create(url)
+		s, err := vo.NewSubscription(url, url)
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			subs = append(subs, s)
+			user.Subscriptions = append(user.Subscriptions, s)
 		}
 	}
 
-	var user vo.User
-	user.ID = "0001"
-	user.Subscriptions = append(user.Subscriptions, subs)
-
-	fmt.Println(user.ReadingList[:10])
-	fmt.Printf("Last Updated At: "%s time.Now())
-
+	user.LastUpdated = time.Now().String()
+	user.RefreshReadingList()	
 }
