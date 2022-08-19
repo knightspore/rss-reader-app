@@ -1,10 +1,7 @@
 package vo
 
 import (
-	"fmt"
-
 	md "github.com/JohannesKaufmann/html-to-markdown"
-	"github.com/araddon/dateparse"
 	"github.com/knightspore/rss-reader-app/backend/module/Network"
 )
 
@@ -30,7 +27,6 @@ func (a *Article) Get() (string, error) {
 }
 
 func (a *Article) Read() (string, error) {
-
 	data, err := a.Get()
 	if err != nil {
 		return "", err
@@ -43,14 +39,4 @@ func (a *Article) Read() (string, error) {
 	}
 
 	return markdown, err
-
-}
-
-func (a *Article) Timestamp() (string, error) {
-	t, err := dateparse.ParseAny(a.PubDate)
-	if err != nil {
-		return "", err
-	}
-
-	return fmt.Sprint(t.Unix()), nil
 }

@@ -1,4 +1,4 @@
-module github.com/knightspore/rss-reader-app/backend
+module github.com/knightspore/rss-reader-app
 
 go 1.18
 
