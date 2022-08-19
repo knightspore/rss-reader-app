@@ -1,12 +1,12 @@
 import type { Article } from "../types/backend-vo";
-const RecentArticlesFeed = ({posts, focus, setFocus}:{posts: Article[], focus: Article, setFocus: Function}) => {
+
+const RecentArticlesFeed = ({posts, focus, setFocus}:{posts: Article[] | null, focus: Article | null, setFocus: Function}) => {
 
   const handleClick = (url: string) => {
-    setFocus(null)
-    setFocus({user_id: '00001', read_post_url: url})
+    console.log("Should focus article")
   }
   
-  return posts.map(post => {
+  return posts ? posts.map(post => {
     const f = post.url === focus?.url
     return (
       <div
@@ -18,7 +18,9 @@ const RecentArticlesFeed = ({posts, focus, setFocus}:{posts: Article[], focus: A
         <p className="text-sm italic font-bold text-slate-300">{post.parent}</p>
       </div>
     );
-  });
+  }) : <>
+  Loading...
+  </>
 };
 
 export default RecentArticlesFeed

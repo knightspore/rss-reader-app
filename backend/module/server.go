@@ -1,26 +1,23 @@
 package module
 
 import (
-	"database/sql"
-	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"time"
 
+	"github.com/couchbase/gocb/v2"
 	"github.com/gorilla/mux"
-	"github.com/knightspore/rss-reader-app/backend/vo"
 )
 
 type Server struct {
-	DB     *sql.DB
+	DB     *gocb.Bucket
 	Router *mux.Router
-	Users []vo.User // TODO: For TUI Replication Purposes
 }
 
 func (s *Server) Routes() {
-	s.Router.HandleFunc("/api/user/create", s.handleUserCreate)
-	s.Router.HandleFunc("/api/subscription/create", s.handleSubscriptionCreate)
-	s.Router.HandleFunc("/api/readinglist/get", s.handleGetReadingList)
+	s.Router.HandleFunc("/api/user/create", s.UserCreate)
+	s.Router.HandleFunc("/api/subscription/create", s.SubscriptionCreate)
+	s.Router.HandleFunc("/api/readinglist/get", s.ReadingListGet)
 }
 
 func (s *Server) Start() {
@@ -38,84 +35,32 @@ func (s *Server) Start() {
 
 }
 
-// Handler Functions
-// For now, these just handle the direct logic required for the route
-// These should be moved elsewhere in the module package
-// and these routes should only handle HTTP
+func (s *Server) ConnectDatabase() error {	
 
-type UserEvent struct {
-	ID string `json:"id"`
-}
+	endpoint := "cb.63kdb50zq6bwphve.cloud.couchbase.com"
+	bucketName := "rss-reader"
+	username := "go-app"
+	password := "Barcka1332!"
 
-type SubscriptionEvent struct {
-	ID string `json:"id"`
-	Title string `json:"title"`
-	URL   string `json:"url"`
-	UserID string `json:"userId"` 
-}
-
-func (s *Server) handleUserCreate(w http.ResponseWriter, r *http.Request) {
-
-	var e UserEvent
-	err := json.NewDecoder(r.Body).Decode(&e)
+	cluster, err := gocb.Connect("couchbases://"+endpoint, gocb.ClusterOptions{
+		Authenticator: gocb.PasswordAuthenticator{
+			Username: username,
+			Password: password,
+		},
+	})
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
-	user := vo.NewUser(e.ID)
+	bucket := cluster.Bucket(bucketName)
 
-	s.Users = append(s.Users, user)
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
-
-}
-
-func (s *Server) handleSubscriptionCreate(w http.ResponseWriter, r *http.Request) {
-
-	var e SubscriptionEvent
-	err := json.NewDecoder(r.Body).Decode(&e)
+	err = bucket.WaitUntilReady(5*time.Second, nil)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
-	sub, err := vo.NewSubscription(e.URL, e.Title)
-	if err != nil {
-		fmt.Println(err)
-	}
+	s.DB = bucket
 
-	var user vo.User
-
-	for _, u := range s.Users {
-		if u.ID == e.UserID {
-			user = u
-		}
-	}
-
-	user.AddSubscription(sub)
-	user.RefreshReadingList()
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user.ReadingList)
-
-}
-
-func (s *Server) handleGetReadingList(w http.ResponseWriter, r *http.Request) {
-
-	var e UserEvent
-	err := json.NewDecoder(r.Body).Decode(&e)
-	if err != nil {
-		fmt.Println(err)
-	}
-	
-	var user vo.User
-	for _, u := range s.Users {
-		if u.ID == e.ID {
-			user = u
-		}
-	}
-	
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user.ReadingList)
+	return err
 
 }

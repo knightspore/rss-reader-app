@@ -1,29 +1,34 @@
 import type {NextPage} from 'next';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Layout from '../components/Layout';
 import Article from '../components/Article';
 import RecentArticlesFeed from '../components/RecentArticlesFeed';
+import { useQuery } from 'react-query';
+import axios from 'axios';
+import { UserEvent } from '../types/backend-module';
 
 const Home: NextPage = () => {
 
+  const [content, setContent] = useState(null)
   const [focusArticle, setFocusArticle] = useState(null);
 
-  const posts = [
-    {
-      title: 'Smart Contracts 101 for Web Developers',
-      url: 'https://ciaran.co.za/smart-contracts-101-for-web-developers',
-      domain: 'ciaran.co.za',
+  const result = fetch("http://127.0.0.1:1337/api/readinglist/get", {
+    body: '{ "id": "parabyl" }',
+    mode: 'no-cors',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
     },
-    {
-      title: 'The Case for Bad Coffee',
-      url: 'https://www.seriouseats.com/the-case-for-bad-coffee',
-      domain: 'seriouseats.com',
-    },
-  ];
+    method: "POST"
+  }).then(res => res.json()).then(data => {
+    setContent(data)
+    console.log(content)
+  })
+
 
   return (
     <Layout
-      recentPosts={<RecentArticlesFeed posts={posts} focus={focusArticle} setFocus={setFocusArticle} />}
+      recentPosts={<RecentArticlesFeed posts={content} focus={focusArticle} setFocus={setFocusArticle} />}
     >
       <Article event={focusArticle} />
     </Layout>
