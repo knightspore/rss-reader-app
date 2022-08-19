@@ -4,18 +4,19 @@ import (
 	"encoding/xml"
 	"fmt"
 
+	"github.com/araddon/dateparse"
 	"github.com/knightspore/rss-reader-app/backend/module/Network"
 )
 
 type Subscription struct {
-	ID string `xml:"channel>id" json:"id"`
-	Title string `xml:"channel>title" json:"title"`
-	Description string `xml:"channel>description" json:"description"`
-	URL        string   `xml:"channel>link" json:"url"`
-	LastUpdated string `xml:"channel>updated" json:"lastUpdated"`
-	Muted bool `json:"channel>muted"`
-	Icon string `json:"channel>icon"`
-	Articles []Article `xml:"channel>item" json:"articles"`
+	ID          string    `xml:"channel>id" json:"id"`
+	Title       string    `xml:"channel>title" json:"title"`
+	Description string    `xml:"channel>description" json:"description"`
+	URL         string    `xml:"channel>link" json:"url"`
+	LastUpdated string    `xml:"channel>updated" json:"lastUpdated"`
+	Muted       bool      `json:"channel>muted"`
+	Icon        string    `json:"channel>icon"`
+	Articles    []Article `xml:"channel>item" json:"articles"`
 }
 
 func NewSubscription(url string, title string) (Subscription, error) {
@@ -23,15 +24,17 @@ func NewSubscription(url string, title string) (Subscription, error) {
 	data, err := Network.Fetch(url)
 	if err != nil {
 		fmt.Printf("Error Fetching Feed URL: %s", url)
-		return Subscription{}, err	
+		return Subscription{}, err
 	}
 
 	var s Subscription
 	err = xml.Unmarshal(data, &s)
-
 	if err != nil {
 		fmt.Printf("Error Unmarshaling XML: %s", url)
+		return Subscription{}, err
 	}
+
+	// Fill in Missing Data
 
 	if title != "" {
 		s.Title = title
@@ -41,8 +44,17 @@ func NewSubscription(url string, title string) (Subscription, error) {
 		s.ID = url
 	}
 
-	for _, a := range s.Articles {
+	for i, a := range s.Articles {
 		a.Parent = s.ID
+		t, err := dateparse.ParseAny(a.PubDate)
+		if err != nil {
+			fmt.Printf("Error Parsing Time: %s / %s", a.Title, a.Parent)
+		}
+
+		ts := t.Unix()
+		a.PubEpoch = ts
+
+		s.Articles[i] = a
 	}
 
 	return s, err
@@ -68,4 +80,3 @@ func (s *Subscription) LatestArticles() *[]Article {
 	return &a
 
 }
-
