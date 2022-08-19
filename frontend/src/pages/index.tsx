@@ -1,10 +1,8 @@
 import type {NextPage} from 'next';
-import {getSession} from 'next-auth/react';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import Layout from '../components/Layout';
-import Post from '../components/Post';
-import RecentPostsFeed from '../components/RecentPostFeed';
-import {Event} from '../types/server';
+import Article from '../components/Article';
+import RecentArticlesFeed from '../components/RecentArticlesFeed';
 
 const Home: NextPage = () => {
 
@@ -25,9 +23,9 @@ const Home: NextPage = () => {
 
   return (
     <Layout
-      recentPosts={<RecentPostsFeed posts={posts} focus={focusArticle} setFocus={setFocusArticle} />}
+      recentPosts={<RecentArticlesFeed posts={posts} focus={focusArticle} setFocus={setFocusArticle} />}
     >
-      <Post event={focusArticle} />
+      <Article event={focusArticle} />
     </Layout>
   );
 };

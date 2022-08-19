@@ -1,6 +1,15 @@
 packages:
   - path: "github.com/knightspore/rss-reader-app/backend/vo"
-    output_path: "frontend/src/types/shared.ts"
+    output_path: "frontend/src/types/backend-vo.ts"
+    type_mappings:
+      time.Time: "string /* RFC3339 */"
+      null.String: "null | string"
+      null.Bool: "null | boolean"
+      uuid.UUID: "string /* uuid */"
+      uuid.NullUUID: "null | string /* uuid */"
+
+  - path: "github.com/knightspore/rss-reader-app/backend/module"
+    output_path: "frontend/src/types/backend-module.ts"
     type_mappings:
       time.Time: "string /* RFC3339 */"
       null.String: "null | string"

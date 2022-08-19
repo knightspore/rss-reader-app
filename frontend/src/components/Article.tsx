@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useQuery } from "react-query";
 
-const Post = ({ event }: Event) => {
+export default function Article ({ event }) {
 
   const [content, setContent] = useState(null);
 
@@ -37,5 +37,3 @@ const Post = ({ event }: Event) => {
     )
   );
 };
-
-export default Post;

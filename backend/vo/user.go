@@ -12,6 +12,12 @@ type User struct {
 	LastUpdated   string         `json:"lastUpdated"`
 }
 
+func NewUser(id string) User {
+	return User{
+		ID:            id,
+	}
+}
+
 func (u *User) RefreshReadingList() {
 
 	var unsorted []Article
@@ -33,4 +39,8 @@ func (u *User) RefreshReadingList() {
 
 	u.LastUpdated = time.Now().String()
 
+}
+
+func (u *User) AddSubscription(s Subscription) {
+	u.Subscriptions = append(u.Subscriptions, s)
 }

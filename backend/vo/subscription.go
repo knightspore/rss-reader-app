@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/araddon/dateparse"
-	"github.com/knightspore/rss-reader-app/backend/module/Network"
+	"github.com/knightspore/rss-reader-app/backend/util"
 )
 
 type Subscription struct {
@@ -21,7 +21,7 @@ type Subscription struct {
 
 func NewSubscription(url string, title string) (Subscription, error) {
 
-	data, err := Network.Fetch(url)
+	data, err := util.Fetch(url)
 	if err != nil {
 		fmt.Printf("Error Fetching Feed URL: %s", url)
 		return Subscription{}, err
@@ -63,7 +63,7 @@ func NewSubscription(url string, title string) (Subscription, error) {
 
 func (s *Subscription) LatestArticles() *[]Article {
 
-	data, err := Network.Fetch(s.URL)
+	data, err := util.Fetch(s.URL)
 	if err != nil {
 		fmt.Printf("Error Fetching Feed URL: %s", s.URL)
 	}

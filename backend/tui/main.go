@@ -22,10 +22,10 @@ var user vo.User
 func main() {
 
 	// Set Username
-	UserNameSetup()
-	AddTestArticles()
+	UserNameSetup() // Working on API
+	AddTestArticles() // Working on API
 
-	list := getItem(0, 5)
+	list := getItem(0, 5) // TODO: Add to API
 
 	// Print JSON
 	b, err := json.Marshal(list)

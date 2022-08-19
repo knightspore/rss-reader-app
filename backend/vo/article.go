@@ -2,7 +2,7 @@ package vo
 
 import (
 	md "github.com/JohannesKaufmann/html-to-markdown"
-	"github.com/knightspore/rss-reader-app/backend/module/Network"
+	"github.com/knightspore/rss-reader-app/backend/util"
 )
 
 type Article struct {
@@ -18,7 +18,7 @@ type Article struct {
 }
 
 func (a *Article) Get() (string, error) {
-	data, err := Network.Fetch(a.URL)
+	data, err := util.Fetch(a.URL)
 	if err != nil {
 		return "", err
 	}

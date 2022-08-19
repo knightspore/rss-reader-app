@@ -5,6 +5,8 @@ go 1.18
 require (
 	github.com/JohannesKaufmann/html-to-markdown v1.3.5
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
+	github.com/gorilla/mux v1.8.0
+	github.com/mattn/go-sqlite3 v1.14.15
 )
 
 require (
