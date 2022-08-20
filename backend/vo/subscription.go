@@ -44,8 +44,19 @@ func NewSubscription(url string, title string) (Subscription, error) {
 		s.ID = url
 	}
 
+	if len(s.URL) == 0 {
+		s.URL = url
+	}
+
+	if len(s.Icon) == 0 {
+		s.Icon = "https://www.google.com/s2/favicons?domain=" + s.URL + "&sz=48"
+	}
+
+	// Fill in Article Data from Parent
+
 	for i, a := range s.Articles {
-		a.Parent = s.ID
+		a.Parent = s.Title
+		a.Icon = s.Icon
 		t, err := dateparse.ParseAny(a.PubDate)
 		if err != nil {
 			fmt.Printf("Error Parsing Time: %s / %s", a.Title, a.Parent)

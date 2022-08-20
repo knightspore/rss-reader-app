@@ -18,6 +18,12 @@ func main() {
 		fmt.Println(err)
 	}
 
+	// Mocks
+
+	
+
+	// Start Server
+
 	fmt.Println("> Server starting on :1337")
 
 	s.Start()

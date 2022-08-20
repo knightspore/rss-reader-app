@@ -13,6 +13,7 @@ export interface Article {
   url: string;
   read: boolean;
   parent: string;
+  icon: string;
 }
 
 //////////

@@ -15,8 +15,12 @@ type Server struct {
 }
 
 func (s *Server) Routes() {
-	s.Router.HandleFunc("/api/user/create", s.UserCreate)
+	// Users
+	s.Router.HandleFunc("/api/user/create", s.UserCreate).Methods(http.MethodGet, http.MethodPost)
+	// Subscriptions
 	s.Router.HandleFunc("/api/subscription/create", s.SubscriptionCreate)
+	s.Router.HandleFunc("/api/subscription/get", s.SubscriptionGet)
+	// Reading List
 	s.Router.HandleFunc("/api/readinglist/get", s.ReadingListGet)
 }
 

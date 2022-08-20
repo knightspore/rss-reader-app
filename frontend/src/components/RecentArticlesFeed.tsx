@@ -1,26 +1,23 @@
-import type { Article } from "../types/backend-vo";
+import Error from "next/error";
+import { useQuery } from "react-query";
+import { fetchReadingList } from "../lib/queries";
+import { Article } from "../types/backend-vo";
+import ArticleCard from "./ArticleCard";
 
-const RecentArticlesFeed = ({posts, focus, setFocus}:{posts: Article[] | null, focus: Article | null, setFocus: Function}) => {
+export default function RecentArticlesFeed() {
+  const { isLoading, error, data } = useQuery(["readingList"], () =>
+    fetchReadingList("parabyl")
+  );
 
-  const handleClick = (url: string) => {
-    console.log("Should focus article")
+  if (isLoading) {
+    return <div className="p-4 text-center">✨ Loading Feeds...</div>;
   }
-  
-  return posts ? posts.map(post => {
-    const f = post.url === focus?.url
-    return (
-      <div
-        key={post.url}
-        onClick={() => handleClick(post.url)}
-        className={`p-2 ${ f ? "bg-slate-300": "bg-slate-100"}`}
-      >
-        <h3 className="text-md">{post.title}</h3>
-        <p className="text-sm italic font-bold text-slate-300">{post.parent}</p>
-      </div>
-    );
-  }) : <>
-  Loading...
-  </>
-};
 
-export default RecentArticlesFeed
+  if (error | !data) {
+    return <Error statusCode={500} />;
+  }
+
+  return data.map((article: Article) => {
+    return <ArticleCard key={article.id} {...{ article }} />;
+  });
+}

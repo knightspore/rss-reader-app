@@ -15,6 +15,7 @@ type Article struct {
 	URL         string `xml:"link" json:"url"`
 	IsRead      bool   `json:"read"`
 	Parent      string `json:"parent"`
+	Icon 			string `json:"icon"`
 }
 
 func (a *Article) Get() (string, error) {

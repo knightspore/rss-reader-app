@@ -1,36 +1,30 @@
-const Layout = ({
-  focusedContent,
-  recentPosts,
-  ...props
-}: {
-  focusedContent: React.ReactNode;
-  recentPosts: any;
-  props: { children: any };
-}) => {
+import { useState } from "react";
+import AddSubscriptionForm from "./AddSubscriptionForm";
+
+export default function Layout({ subscriptions, articles }: { subscriptions: any, articles: any }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className="flex flex-col w-screen h-screen text-slate-900">
-      <header className="flex justify-between p-4 align-middle bg-slate-300">
+    <div className="flex flex-col w-screen h-screen text-slate-200 bg-slate-800">
+      <header className="flex justify-between p-4 align-middle bg-slate-700">
         <div>
-          <h1>RSS Reader</h1>
+          <h1 className="font-bold">📄 RSS Reader</h1>
         </div>
-        <div>
-          <button className="px-2 py-1 text-xs font-bold uppercase transition-all rounded-sm hover:bg-slate-600 duration-250 bg-slate-900 text-slate-50">
-            Add Subscription
-          </button>
-        </div>
+        <AddSubscriptionForm {...{ open, setOpen }} />
       </header>
-      <div className="grid flex-grow grid-cols-6">
+      <div className="grid flex-initial grid-cols-1 md:grid-cols-7 overflow-clip">
+        <section className="col-span-1 p-2 md:col-span-2">
+          <h2 className="mb-2 font-medium text-md">Subscriptions</h2>
+          {subscriptions}
+        </section>
         <section
           id="recent-posts-feed"
-          className="flex flex-col col-span-2 gap-4 p-4 bg-slate-200"
+          className="flex flex-col col-span-1 gap-2 p-2 overflow-y-scroll md:col-span-5"
         >
-          {recentPosts}
-        </section>
-        <section id="read-post-area" className="col-span-4 bg-slate-50">
+          <h2 className="mb-2 font-medium text-md">Reading List</h2>
+          {articles}
         </section>
       </div>
     </div>
   );
-};
-
-export default Layout;
+}

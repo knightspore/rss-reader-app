@@ -79,18 +79,19 @@ func (s *Server) SubscriptionCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(user.Subscriptions)
 
 }
 
-func (s *Server) ReadingListGet(w http.ResponseWriter, r *http.Request) {
+func (s *Server) SubscriptionGet(w http.ResponseWriter, r *http.Request) {
 
 	var e UserEvent
 	err := json.NewDecoder(r.Body).Decode(&e)
 	if err != nil {
 		fmt.Println(err)
 	}
-	
+
 	var user vo.User
 
 	col := s.DB.Collection("users")
@@ -105,6 +106,34 @@ func (s *Server) ReadingListGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	json.NewEncoder(w).Encode(user.Subscriptions)
+
+}
+
+func (s *Server) ReadingListGet(w http.ResponseWriter, r *http.Request) {
+	
+	var e UserEvent
+	err := json.NewDecoder(r.Body).Decode(&e)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var user vo.User
+
+	col := s.DB.Collection("users")
+	result, err := col.Get(e.ID, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = result.Content(&user)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(user.ReadingList)
 
 }

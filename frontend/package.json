@@ -10,8 +10,10 @@
     "prettier": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
+    "@headlessui/react": "^1.6.6",
     "@tailwindcss/typography": "^0.5.4",
     "axios": "^0.27.2",
+    "moment": "^2.29.4",
     "next": "12.2.0",
     "next-auth": "^4.10.0",
     "prettier": "^2.7.1",
