@@ -28,6 +28,7 @@ func (a *Article) Get() (string, error) {
 }
 
 func (a *Article) Read() (string, error) {
+
 	data, err := a.Get()
 	if err != nil {
 		return "", err

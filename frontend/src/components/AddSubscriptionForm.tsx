@@ -1,14 +1,12 @@
 import { Dialog } from "@headlessui/react";
+import { useState } from "react";
 import { createSubscription } from "../lib/queries";
 import { SubscriptionEvent } from "../types/backend-module";
 
-export default function AddSubscriptionForm({
-  open,
-  setOpen,
-}: {
-  open: boolean;
-  setOpen: any;
-}) {
+export default function AddSubscriptionForm() {
+
+  const [open, setOpen] = useState(false);
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -20,9 +18,11 @@ export default function AddSubscriptionForm({
     };
 
     const res = await createSubscription(event);
-    if (res.status === 200) {
+    console.log(res)
+    if (res === 200) {
       setOpen(false);
     }
+
   };
 
   return (

@@ -8,132 +8,132 @@ import (
 	"github.com/knightspore/rss-reader-app/backend/vo"
 )
 
-type UserEvent struct {
-	ID string `json:"id"`
+func (s *Server) UserCreate() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		e, err := NewUserEvent(r.Body)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		user := vo.NewUser(e.ID)
+
+		err = s.UserUpdate(user)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		json.NewEncoder(w).Encode(user)
+
+	}
 }
 
-type SubscriptionEvent struct {
-	ID string `json:"id"`
-	Title string `json:"title"`
-	URL   string `json:"url"`
-	UserID string `json:"userId"` 
+
+func (s *Server) SubscriptionCreate() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		e, err := NewSubscriptionEvent(r.Body)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		sub, err := vo.NewSubscription(e.URL, e.Title)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		json.NewEncoder(w).Encode(http.StatusOK)
+
+		user, err := s.UserGet(e.UserID)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		user.AddSubscription(sub)
+		user.RefreshReadingList()
+
+		s.UserUpdate(user)
+
+	}
 }
 
-func (s *Server) UserCreate(w http.ResponseWriter, r *http.Request) {
+func (s *Server) SubscriptionGet() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 
-	var e UserEvent
-	err := json.NewDecoder(r.Body).Decode(&e)
-	if err != nil {
-		fmt.Println(err)
+		e, err := NewUserEvent(r.Body)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		user, err := s.UserGet(e.ID)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		json.NewEncoder(w).Encode(user.Subscriptions)
+
 	}
-
-	user := vo.NewUser(e.ID)
-
-	col := s.DB.Collection("users")
-	_, err = col.Upsert(user.ID, user, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
-
 }
 
-func (s *Server) SubscriptionCreate(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ReadingListGet() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		
+		e, err := NewUserEvent(r.Body)
+		if err != nil {
+			fmt.Println(err)
+		}
 
-	var e SubscriptionEvent
-	err := json.NewDecoder(r.Body).Decode(&e)
-	if err != nil {
-		fmt.Println(err)
+		user, err := s.UserGet(e.ID)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		json.NewEncoder(w).Encode(user.ReadingList)
+
 	}
-
-	sub, err := vo.NewSubscription(e.URL, e.Title)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	var user vo.User
-
-	col := s.DB.Collection("users")
-	result, err := col.Get(e.UserID, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = result.Content(&user)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	user.AddSubscription(sub)
-	user.RefreshReadingList()
-
-	_, err = col.Upsert(e.UserID, vo.User{
-		ID: user.ID,
-		Subscriptions: user.Subscriptions,
-		ReadingList: user.ReadingList,
-	}, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(w).Encode(user.Subscriptions)
-
 }
 
-func (s *Server) SubscriptionGet(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ArticleRead() func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 
-	var e UserEvent
-	err := json.NewDecoder(r.Body).Decode(&e)
-	if err != nil {
-		fmt.Println(err)
+		e, err := NewArticleEvent(r.Body)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		user, err := s.UserGet(e.UserID)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		article, err := user.GetArticle(e.URL)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		md, err := article.Read()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		article.Content = md
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		json.NewEncoder(w).Encode(article.Content)
+
+		article.IsRead = true
+		user.RefreshReadingList()
+		s.UserUpdate(user)
+
 	}
-
-	var user vo.User
-
-	col := s.DB.Collection("users")
-	result, err := col.Get(e.ID, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = result.Content(&user)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(w).Encode(user.Subscriptions)
-
-}
-
-func (s *Server) ReadingListGet(w http.ResponseWriter, r *http.Request) {
-	
-	var e UserEvent
-	err := json.NewDecoder(r.Body).Decode(&e)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	var user vo.User
-
-	col := s.DB.Collection("users")
-	result, err := col.Get(e.ID, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	err = result.Content(&user)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	json.NewEncoder(w).Encode(user.ReadingList)
 
 }
