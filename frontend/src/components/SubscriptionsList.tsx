@@ -21,6 +21,6 @@ export default function SubscriptionsList() {
   }
 
   return data.map((sub: Subscription) => {
-    return <SubscriptionCard {...{ sub }} />;
+    return <SubscriptionCard key={sub.id} {...{ sub }} />;
   });
 }

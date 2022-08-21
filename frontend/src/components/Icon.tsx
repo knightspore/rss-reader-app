@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Icon({ src }: { src: string }) {
   return (
-    <div className="w-4 h-4">
+    <div className="inline-block w-4 h-4">
       <Image
         alt={src + " icon"}
         width={48}

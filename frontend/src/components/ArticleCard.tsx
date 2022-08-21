@@ -17,11 +17,16 @@ export default function ArticleCard({
   return (
     <div
       key={article.url}
-      className={`pb-2 text-slate-200 ${article.read && "opacity-50"}`}
+      className={`text-slate-200 ${article.read && "opacity-50"}`}
       onClick={handleClick}
     >
-      <div className="flex items-center mb-1 text-sm italic font-medium gap-2 text-slate-300">
-        <Icon src={article.icon} />
+      <h3 className="mb-1 text-lg">
+        <div className="inline-block pr-2 translate-y-1">
+          <Icon src={article.icon} />
+        </div>
+        {article.title}
+      </h3>
+      <div className="flex items-center text-sm italic font-medium gap-2 text-slate-300">
         <a href={article.url} target="_blank" rel="noreferrer noopener">
           <span>{article.parent}</span>
         </a>
@@ -33,9 +38,7 @@ export default function ArticleCard({
           })}
         </time>
       </div>
-      <div className="py-1">
-        <h3 className="font-medium text-md">{article.title}</h3>
-      </div>
+      <div className="py-1"></div>
     </div>
   );
 }
