@@ -10,7 +10,6 @@ export default function RecentArticlesFeed({
 }: {
   setFocus: Function;
 }) {
-
   const e: UserEvent = { id: "parabyl" };
   const { isLoading, error, data } = useQuery(["readingList"], () =>
     fetchReadingList(e)
@@ -22,9 +21,12 @@ export default function RecentArticlesFeed({
 
   if (error) {
     return <Error statusCode={500} />;
-  } 
+  }
 
-  return data && data.map((article: Article) => {
-    return <ArticleCard key={article.id} {...{ article, setFocus  }} />;
-  });
+  return (
+    data &&
+    data.map((article: Article) => {
+      return <ArticleCard key={article.id} {...{ article, setFocus }} />;
+    })
+  );
 }

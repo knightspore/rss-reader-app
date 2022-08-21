@@ -4,7 +4,6 @@ import { createSubscription } from "../lib/queries";
 import { SubscriptionEvent } from "../types/backend-module";
 
 export default function AddSubscriptionForm() {
-
   const [open, setOpen] = useState(false);
 
   const handleSubmit = async (e: any) => {
@@ -18,11 +17,10 @@ export default function AddSubscriptionForm() {
     };
 
     const res = await createSubscription(event);
-    console.log(res)
+    console.log(res);
     if (res === 200) {
       setOpen(false);
     }
-
   };
 
   return (

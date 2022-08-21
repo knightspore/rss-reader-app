@@ -3,11 +3,10 @@ import { useQuery } from "react-query";
 import { fetchSubscription } from "../lib/queries";
 import { UserEvent } from "../types/backend-module";
 import { Subscription } from "../types/backend-vo";
-import Icon from "./Icon";
+import SubscriptionCard from "./SubscriptionCard";
 
 export default function SubscriptionsList() {
-
-  const e: UserEvent = { id: "parabyl"}
+  const e: UserEvent = { id: "parabyl" };
 
   const { isLoading, error, data } = useQuery(["subscriptions"], () =>
     fetchSubscription(e)
@@ -22,6 +21,6 @@ export default function SubscriptionsList() {
   }
 
   return data.map((sub: Subscription) => {
-    return <div key={sub.id} className="flex items-center gap-2"><Icon src={sub["channel>icon"]} />{sub.title}</div>;
+    return <SubscriptionCard {...{ sub }} />;
   });
 }
