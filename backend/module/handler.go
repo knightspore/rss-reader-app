@@ -30,7 +30,6 @@ func (s *Server) UserCreate() func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-
 func (s *Server) SubscriptionCreate() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
@@ -83,7 +82,7 @@ func (s *Server) SubscriptionGet() func(http.ResponseWriter, *http.Request) {
 
 func (s *Server) ReadingListGet() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		
+
 		e, err := NewUserEvent(r.Body)
 		if err != nil {
 			fmt.Println(err)
@@ -114,9 +113,15 @@ func (s *Server) ArticleRead() func(http.ResponseWriter, *http.Request) {
 			fmt.Println(err)
 		}
 
-		article, err := user.GetArticle(e.URL)
-		if err != nil {
-			fmt.Println(err)
+		// GetArticle Not Currently Working
+		// article, err := user.GetArticle(e.URL)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
+
+		// Workaround
+		article := vo.Article{
+			URL: e.URL,
 		}
 
 		md, err := article.Read()

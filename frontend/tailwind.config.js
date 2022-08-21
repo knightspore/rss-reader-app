@@ -10,7 +10,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ["Barlow", "sans-serif"],
+        sans: ["Inconsolata", "sans-serif"],
       },
     },
   },
