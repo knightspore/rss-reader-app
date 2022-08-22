@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/couchbase/gocb/v2"
@@ -43,12 +44,14 @@ func NewServer() *Server {
 
 func (s *Server) Start() {
 
+	port := os.Getenv("PORT")
+
 	s.Routes()
 	s.Router.Headers("Content-Type", "application/json")
 
 	srv := &http.Server{
 		Handler:      s.Router,
-		Addr:         "127.0.0.1:1337",
+		Addr:         "127.0.0.1:" + port,
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

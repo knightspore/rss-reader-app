@@ -4,8 +4,11 @@ import {
   UserEvent,
 } from "../types/backend-module";
 
+const baseUrl = "127.0.0.1"
+const port = "1337"
+
 export const fetchReadingList = async (event: UserEvent) => {
-  const res = await fetch("http://127.0.0.1:1337/api/readinglist/get", {
+  const res = await fetch(`http://${baseUrl}:${port}/api/readinglist/get`,{
     method: "POST",
     body: JSON.stringify(event),
   });
@@ -13,7 +16,7 @@ export const fetchReadingList = async (event: UserEvent) => {
 };
 
 export const createSubscription = async (event: SubscriptionEvent) => {
-  const res = await fetch("http://127.0.0.1:1337/api/subscription/create", {
+  const res = await fetch(`http://${baseUrl}:${port}/api/subscription/create`,{
     method: "POST",
     body: JSON.stringify(event),
   });
@@ -21,7 +24,7 @@ export const createSubscription = async (event: SubscriptionEvent) => {
 };
 
 export const fetchSubscription = async (event: UserEvent) => {
-  const res = await fetch("http://127.0.0.1:1337/api/subscription/get", {
+  const res = await fetch(`http://${baseUrl}:${port}/api/subscription/get`,{
     method: "POST",
     body: JSON.stringify(event),
   });
@@ -29,7 +32,7 @@ export const fetchSubscription = async (event: UserEvent) => {
 };
 
 export const readArticle = async (event: ArticleEvent) => {
-  const res = await fetch("http://127.0.0.1:1337/api/article/read", {
+  const res = await fetch(`http://${baseUrl}:${port}/api/article/read`,{
     method: "POST",
     body: JSON.stringify(event),
   });

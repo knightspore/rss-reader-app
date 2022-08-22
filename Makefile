@@ -1,10 +1,13 @@
 types:
 		~/go/bin/tygo generate 
 
-fe:
+front:
 		cd frontend && yarn dev
 
-be:
-		go run ./backend
+back:
+		PORT=1337 go run ./backend
 
-all: types fe be
+deploy:
+		cd backend && git push heroku
+
+all: types front back
