@@ -17,7 +17,7 @@ export default function ArticleCard({
   return (
     <div
       key={article.url}
-      className={`text-slate-200 ${article.read && "opacity-50"}`}
+      className={`cursor-pointer hover:opacity-50 transition-all duration-150 text-slate-200 ${article.read && "opacity-50"}`}
       onClick={handleClick}
     >
       <h3 className="mb-1 text-lg">
@@ -26,7 +26,7 @@ export default function ArticleCard({
         </div>
         {article.title}
       </h3>
-      <div className="flex items-center text-sm italic font-medium gap-2 text-slate-300">
+      <div className="flex items-center gap-2 text-sm italic font-medium text-slate-300">
         <a href={article.url} target="_blank" rel="noreferrer noopener">
           <span>{article.parent}</span>
         </a>

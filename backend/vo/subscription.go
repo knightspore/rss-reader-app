@@ -30,10 +30,10 @@ func NewSubscription(url string, title string) (Subscription, error) {
 
 	s, err := NewSubscriptionFromJSON(feed.JSON)
 
-	fmt.Printf("%+v",s)
+	// Working Here
 
 	// Fill in Missing Data
-	if title != "" {
+	if s.Title != "" {
 		s.Title = title
 	}
 	if len(s.ID) == 0 {

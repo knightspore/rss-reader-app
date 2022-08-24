@@ -15,7 +15,7 @@ export default function RecentArticlesFeed({
     fetchReadingList(e)
   );
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <div className="p-4 text-center">✨ Loading Feeds...</div>;
   }
 
@@ -23,10 +23,8 @@ export default function RecentArticlesFeed({
     return <Error statusCode={500} />;
   }
 
-  return (
-    data &&
-    data.map((article: Article) => {
+  return data.map((article: Article) => {
       return <ArticleCard key={article.id} {...{ article, setFocus }} />;
-    })
+    }
   );
 }

@@ -19,6 +19,11 @@ type Article struct {
 }
 
 func (a *Article) Get() (string, error) {
+
+	if a.Content != "" {
+		return a.Content, nil
+	}
+
 	data, err := util.Fetch(a.URL)
 	if err != nil {
 		return "", err

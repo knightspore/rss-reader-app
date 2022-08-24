@@ -6,21 +6,27 @@ import { Subscription } from "../types/backend-vo";
 import SubscriptionCard from "./SubscriptionCard";
 
 export default function SubscriptionsList() {
+
   const e: UserEvent = { id: "parabyl" };
 
   const { isLoading, error, data } = useQuery(["subscriptions"], () =>
     fetchSubscription(e)
   );
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return <div className="p-4 text-center">✨ Loading Subscriptions...</div>;
   }
 
-  if (error | !data) {
+  if (error) {
     return <Error statusCode={500} />;
   }
 
   return data.map((sub: Subscription) => {
-    return <SubscriptionCard key={sub.id} {...{ sub }} />;
+      // TODO: Fix broken icons
+      if (!sub.icon) {
+        console.log(sub)
+      }
+     return sub.icon && <SubscriptionCard key={sub.id} {...{ sub }} />;
   });
+
 }

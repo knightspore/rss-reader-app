@@ -44,11 +44,14 @@ func (u *User) RefreshReadingList() {
 		}
 	}
 
-	// Order by PubDate (Unix Timestamp)
-	sort.Slice(unique, func(i, j int) bool {
-		return unsorted[i].PubEpoch > unsorted[j].PubEpoch
-	})
-	u.ReadingList = unique[:30]
+	if len(unique) > 1 {
+		// Order by PubDate (Unix Timestamp)
+		sort.Slice(unique, func(i, j int) bool {
+			return unsorted[i].PubEpoch > unsorted[j].PubEpoch
+		})
+	}
+
+	u.ReadingList = unique
 
 	u.LastUpdated = time.Now().String()
 

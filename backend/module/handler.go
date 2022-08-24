@@ -93,7 +93,7 @@ func (s *Server) ReadingListGet() func(http.ResponseWriter, *http.Request) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		json.NewEncoder(w).Encode(user.ReadingList)
+		json.NewEncoder(w).Encode(user.ReadingList[:30])
 
 	}
 }

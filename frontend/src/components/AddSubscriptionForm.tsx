@@ -5,9 +5,11 @@ import { SubscriptionEvent } from "../types/backend-module";
 
 export default function AddSubscriptionForm() {
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const event: SubscriptionEvent = {
       id: e.target.url.value,
@@ -20,7 +22,8 @@ export default function AddSubscriptionForm() {
     console.log(res);
     if (res === 200) {
       setOpen(false);
-    }
+      setIsLoading(false);
+    } else setIsLoading(false);
   };
 
   return (
@@ -57,9 +60,10 @@ export default function AddSubscriptionForm() {
             />
             <button
               type="submit"
-              className="px-2 py-1 text-sm font-bold uppercase transition-all rounded-sm hover:bg-slate-600 duration-250 bg-slate-900 text-slate-50"
+              className="px-2 py-1 text-sm font-bold uppercase transition-all rounded-sm hover:bg-slate-600 duration-250 bg-slate-900 text-slate-50 disabled:opacity-50"
+              disabled={isLoading}
             >
-              Add Subscription
+              {isLoading ? "Adding..." : "Add Subscription"}
             </button>
           </form>
         </Dialog.Panel>

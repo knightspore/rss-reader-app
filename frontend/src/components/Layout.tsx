@@ -21,15 +21,15 @@ export default function Layout({
         </div>
         <AddSubscriptionForm />
       </header>
-      <div className="flex-initial grid grid-cols-1 md:grid-cols-8 overflow-clip">
-        <section className="p-2 col-span-1">
+      <div className="grid flex-initial grid-cols-1 md:grid-cols-8 overflow-clip">
+        <section className="col-span-1 p-2">
           <h2
             onClick={() => setShowSubs(!showSubs)}
             className="mb-2 font-medium select-none text-md"
           >
             Subscriptions
           </h2>
-          <div className="flex flex-row flex-wrap md:flex-col gap-2">
+          <div className="flex flex-row flex-wrap gap-2 md:flex-col">
             {showSubs && subscriptions}
           </div>
         </section>
