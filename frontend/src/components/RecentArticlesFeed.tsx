@@ -7,12 +7,18 @@ import ArticleCard from "./ArticleCard";
 
 export default function RecentArticlesFeed({
   setFocus,
+  filters,
 }: {
   setFocus: Function;
+  filters: [string]|[]
 }) {
   const e: UserEvent = { id: "parabyl" };
-  const { isLoading, error, data } = useQuery(["readingList"], () =>
-    fetchReadingList(e)
+  const { isLoading, error, data } = useQuery(
+    ["readingList"],
+    () => fetchReadingList(e),
+    {
+      notifyOnChangeProps: ["data"],
+    }
   );
 
   if (isLoading || !data) {
@@ -24,7 +30,10 @@ export default function RecentArticlesFeed({
   }
 
   return data.map((article: Article) => {
-      return <ArticleCard key={article.id} {...{ article, setFocus }} />;
-    }
-  );
+    return (
+      !filters.includes(article.parent) && (
+        <ArticleCard key={article.id} {...{ article, setFocus }} />
+      )
+    );
+  });
 }

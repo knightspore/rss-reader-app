@@ -1,16 +1,26 @@
 import Error from "next/error";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import { fetchSubscription } from "../lib/queries";
 import { UserEvent } from "../types/backend-module";
 import { Subscription } from "../types/backend-vo";
 import SubscriptionCard from "./SubscriptionCard";
 
-export default function SubscriptionsList() {
-
+export default function SubscriptionsList({
+  filters,
+  setFilters,
+}: {
+  filters: [];
+  setFilters: Function;
+}) {
   const e: UserEvent = { id: "parabyl" };
 
-  const { isLoading, error, data } = useQuery(["subscriptions"], () =>
-    fetchSubscription(e)
+  const { isLoading, error, data } = useQuery(
+    ["subscriptions"],
+    () => fetchSubscription(e),
+    {
+      notifyOnChangeProps: ["data", "error"],
+    }
   );
 
   if (isLoading || !data) {
@@ -21,12 +31,14 @@ export default function SubscriptionsList() {
     return <Error statusCode={500} />;
   }
 
-  return data.map((sub: Subscription) => {
+  return data
+    .sort((a: Subscription, b: Subscription) => a.title.localeCompare(b.title))
+    .map((sub: Subscription) => {
       // TODO: Fix broken icons
-      if (!sub.icon) {
-        console.log(sub)
-      }
-     return sub.icon && <SubscriptionCard key={sub.id} {...{ sub }} />;
-  });
-
+      return (
+        sub.icon && (
+          <SubscriptionCard key={sub.id} {...{ sub, filters, setFilters }} />
+        )
+      );
+    });
 }

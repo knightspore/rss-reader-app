@@ -9,10 +9,14 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 
   return (
     <>
-    <Head>
-      <title>RSS Reader</title>
-      <link rel="shortcut icon" href="https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://ciaran.co.za&size=48" type="image/x-icon" />
-    </Head>
+      <Head>
+        <title>RSS Reader</title>
+        <link
+          rel="shortcut icon"
+          href="https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://ciaran.co.za&size=48"
+          type="image/x-icon"
+        />
+      </Head>
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
       </QueryClientProvider>

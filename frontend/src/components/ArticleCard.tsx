@@ -17,7 +17,9 @@ export default function ArticleCard({
   return (
     <div
       key={article.url}
-      className={`cursor-pointer hover:opacity-50 transition-all duration-150 text-slate-200 ${article.read && "opacity-50"}`}
+      className={`cursor-pointer hover:opacity-50 transition-all duration-150 text-slate-200 ${
+        article.read && "opacity-50"
+      }`}
       onClick={handleClick}
     >
       <h3 className="mb-1 text-lg">

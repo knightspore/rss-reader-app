@@ -30,16 +30,16 @@ export default function AddSubscriptionForm() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="px-2 py-1 text-xs font-bold uppercase transition-all rounded-sm hover:bg-slate-600 duration-250 bg-slate-900 text-slate-50"
+        className="px-2 py-1 text-xs font-bold uppercase rounded-sm transition-all hover:bg-slate-800/50 duration-250 bg-slate-800 text-slate-50"
       >
         Add Subscription
       </button>
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        className="absolute top-0 left-0 flex items-center justify-center w-full h-full bg-slate-900/80"
+        className="absolute top-0 left-0 flex items-center justify-center w-full h-full bg-slate-500/80"
       >
-        <Dialog.Panel className="grid gap-2 p-4 rounded-md shadow-lg bg-slate-800 text-slate-200">
+        <Dialog.Panel className="p-4 shadow-lg grid gap-2 rounded-md bg-slate-900 text-slate-200">
           <Dialog.Title>
             <h2>Add Subscription</h2>
           </Dialog.Title>
@@ -60,7 +60,7 @@ export default function AddSubscriptionForm() {
             />
             <button
               type="submit"
-              className="px-2 py-1 text-sm font-bold uppercase transition-all rounded-sm hover:bg-slate-600 duration-250 bg-slate-900 text-slate-50 disabled:opacity-50"
+              className="px-2 py-1 text-sm font-bold uppercase rounded-sm transition-all hover:bg-slate-800/50 duration-250 bg-slate-800 text-slate-50 disabled:opacity-50"
               disabled={isLoading}
             >
               {isLoading ? "Adding..." : "Add Subscription"}
