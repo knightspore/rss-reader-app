@@ -1,6 +1,13 @@
 types:
 		~/go/bin/tygo generate 
 
+test: 
+		cd backend && go test . -v -cover
+		cd backend/module && go test . -v -cover
+		cd backend/parse && go test . -v -cover
+		cd backend/util && go test . -v -cover
+		cd backend/vo && go test . -v -cover
+
 front:
 		cd frontend && yarn dev
 

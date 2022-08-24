@@ -32,7 +32,6 @@ func (s *Server) UserCreate() func(http.ResponseWriter, *http.Request) {
 
 func (s *Server) SubscriptionCreate() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		e, err := NewSubscriptionEvent(r.Body)
 		if err != nil {
 			fmt.Println(err)
@@ -42,10 +41,6 @@ func (s *Server) SubscriptionCreate() func(http.ResponseWriter, *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		json.NewEncoder(w).Encode(http.StatusOK)
 
 		user, err := s.UserGet(e.UserID)
 		if err != nil {
@@ -57,6 +52,9 @@ func (s *Server) SubscriptionCreate() func(http.ResponseWriter, *http.Request) {
 
 		s.UserUpdate(user)
 
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		json.NewEncoder(w).Encode(http.StatusOK)
 	}
 }
 

@@ -25,8 +25,8 @@ export interface Subscription {
   description: string;
   url: string;
   lastUpdated: string;
-  'channel>muted': boolean;
-  'channel>icon': string;
+  muted: boolean;
+  icon: string;
   articles: Article[];
 }
 
