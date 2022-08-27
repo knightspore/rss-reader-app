@@ -15,11 +15,11 @@ build.backend:
 	cd backend && go build -o ./../bin/backend_app
 
 # Docker
-docker:
+docker.build:
 	docker build -t readerbackend .
 
 docker.dev:
-	docker run -p 80:1337 -d readerbackend
+	docker run -p 1337:1337 -d readerbackend
 
 # Testing
 test.backend: 
@@ -30,6 +30,7 @@ test.backend:
 		cd backend/vo && go test . -v -cover
 
 # Grouped Commands
+docker: docker.build docker.dev
 test.all: test.backend
 
 all: 
