@@ -1,4 +1,4 @@
-export const apiUrl: string = "http://localhost:8080";
+export const apiUrl: string = "http://192.168.0.109:1337";
 
 export const api = {
   subscriptions: {

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Article } from "../types/backend-vo";
 import Icon from "./Icon";
 
@@ -6,7 +5,7 @@ export default function ArticleCard({
   article,
   setFocus,
 }: {
-  article: Article;
+  article: Article; 
   setFocus: Function;
 }) {
   const handleClick = () => {
@@ -28,7 +27,7 @@ export default function ArticleCard({
         </div>
         {article.title}
       </h3>
-      <div className="flex items-center gap-2 text-sm italic font-medium text-slate-300">
+      <div className="flex items-center text-sm italic font-medium gap-2 text-slate-300">
         <a href={article.url} target="_blank" rel="noreferrer noopener">
           <span>{article.parent}</span>
         </a>

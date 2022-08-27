@@ -23,7 +23,7 @@ export default function SubscriptionCard({
 
   const handleClick = () => {
     if (active) {
-      setFilters((filters) => [sub.title, ...filters]);
+      setFilters((f: [any]) => [sub.title, ...f]);
     } else if (!active) {
       setFilters(
         filters.map((f) => {
