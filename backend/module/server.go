@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/couchbase/gocb/v2"
@@ -43,7 +42,7 @@ func NewServer() *Server {
 
 func (s *Server) Start() {
 
-	port := os.Getenv("PORT")
+	port := "1337"
 
 	s.Routes()
 	s.Router.Headers("Content-Type", "application/json")

@@ -1,20 +1,36 @@
-types:
+create.types:
 		~/go/bin/tygo generate 
 
-test: 
+# Development
+
+dev.frontend:
+		cd frontend && yarn dev
+
+dev.backend:
+		PORT=1337 go run ./backend
+
+# Build
+
+build.backend:
+	cd backend && go build -o ./../bin/backend_app
+
+# Docker
+docker:
+	docker build -t readerbackend .
+
+docker.dev:
+	docker run -p 80:1337 -d readerbackend
+
+# Testing
+test.backend: 
 		cd backend && go test . -v -cover
 		cd backend/module && go test . -v -cover
 		cd backend/parse && go test . -v -cover
 		cd backend/util && go test . -v -cover
 		cd backend/vo && go test . -v -cover
 
-front:
-		cd frontend && yarn dev
+# Grouped Commands
+test.all: test.backend
 
-back:
-		PORT=1337 go run ./backend
-
-deploy:
-		cd backend && git push heroku
-
-all: types front back
+all: 
+	make -j create.types dev.frontend dev.backend
