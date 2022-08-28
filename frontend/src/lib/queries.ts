@@ -4,7 +4,7 @@ import {
   UserEvent,
 } from "../types/backend-module";
 
-const baseUrl = "127.0.0.1";
+const baseUrl = "172.17.0.2";
 const port = "1337";
 
 export const fetchReadingList = async (event: UserEvent) => {

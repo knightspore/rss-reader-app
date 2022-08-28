@@ -16,14 +16,11 @@ type Server struct {
 }
 
 func (s *Server) Routes() {
-	// Users
-	s.Router.HandleFunc("/api/user/create", s.UserCreate())
-	// Subscriptions
-	s.Router.HandleFunc("/api/subscription/create", s.SubscriptionCreate())
-	s.Router.HandleFunc("/api/subscription/get", s.SubscriptionGet())
-	// Reading List
-	s.Router.HandleFunc("/api/readinglist/get", s.ReadingListGet())
-	s.Router.HandleFunc("/api/article/read", s.ArticleRead())
+	s.Router.HandleFunc("/api/user/create", s.HandleUserCreate())
+	s.Router.HandleFunc("/api/subscription/create", s.HandleSubscriptionCreate())
+	s.Router.HandleFunc("/api/subscription/get", s.HandleSubscriptionGet())
+	s.Router.HandleFunc("/api/readinglist/get", s.HandleReadingListGet())
+	s.Router.HandleFunc("/api/article/read", s.HandleArticleRead())
 }
 
 func NewServer() *Server {
@@ -40,12 +37,23 @@ func NewServer() *Server {
 
 }
 
+func middleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.RequestURI)
+
+		defer func(startedAt time.Time) {
+			log.Println(r.RequestURI, time.Since(startedAt))
+		}(time.Now())
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func (s *Server) Start() {
 
 	port := "1337"
 
 	s.Routes()
-	s.Router.Headers("Content-Type", "application/json")
 
 	srv := &http.Server{
 		Handler:      s.Router,
@@ -53,11 +61,16 @@ func (s *Server) Start() {
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
+
 	srv.ListenAndServe()
 
 }
 
-func (s *Server) ConnectDatabase() error {
+type DB struct {
+	Bucket *gocb.Bucket
+}
+
+func (d *DB) ConnectDatabase() error {
 
 	endpoint := "cb.63kdb50zq6bwphve.cloud.couchbase.com"
 	bucketName := "rss-reader"
@@ -81,7 +94,7 @@ func (s *Server) ConnectDatabase() error {
 		log.Fatal(err)
 	}
 
-	s.DB = bucket
+	DB.Bucket = bucket
 
 	return err
 

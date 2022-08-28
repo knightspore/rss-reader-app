@@ -8,8 +8,8 @@ packages:
       uuid.UUID: "string /* uuid */"
       uuid.NullUUID: "null | string /* uuid */"
 
-  - path: "github.com/knightspore/rss-reader-app/backend/module"
-    output_path: "frontend/src/types/backend-module.ts"
+  - path: "github.com/knightspore/rss-reader-app/backend/server"
+    output_path: "frontend/src/types/backend-server.ts"
     type_mappings:
       time.Time: "string /* RFC3339 */"
       null.String: "null | string"

@@ -7,7 +7,7 @@ dev.frontend:
 		cd frontend && yarn dev
 
 dev.backend:
-		PORT=1337 go run ./backend
+		go run ./backend
 
 # Build
 
@@ -24,8 +24,8 @@ docker.dev:
 # Testing
 test.backend: 
 		cd backend && go test . -v -cover
-		cd backend/module && go test . -v -cover
 		cd backend/parse && go test . -v -cover
+		cd backend/server && go test . -v -cover
 		cd backend/util && go test . -v -cover
 		cd backend/vo && go test . -v -cover
 

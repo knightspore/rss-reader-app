@@ -8,7 +8,7 @@ import (
 	"github.com/knightspore/rss-reader-app/backend/vo"
 )
 
-func (s *Server) UserCreate() func(http.ResponseWriter, *http.Request) {
+func (s *Server) HandleUserCreate() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		e, err := NewUserEvent(r.Body)
@@ -18,26 +18,27 @@ func (s *Server) UserCreate() func(http.ResponseWriter, *http.Request) {
 
 		user := vo.NewUser(e.ID)
 
-		err = s.UserUpdate(user)
+		err = s.UserUpsert(user)
 		if err != nil {
 			fmt.Println(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		json.NewEncoder(w).Encode(user)
+		json.NewEncoder(w).Encode(http.StatusOK)
 
 	}
 }
 
-func (s *Server) SubscriptionCreate() func(http.ResponseWriter, *http.Request) {
+func (s *Server) HandleSubscriptionCreate() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
+
 		e, err := NewSubscriptionEvent(r.Body)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		sub, err := vo.NewSubscription(e.URL, e.Title)
+		err = s.SubscriptionCreate(e.URL, e.Title)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -46,39 +47,40 @@ func (s *Server) SubscriptionCreate() func(http.ResponseWriter, *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-
-		user.AddSubscription(sub)
-		user.RefreshReadingList()
-
-		s.UserUpdate(user)
+		user.Subscriptions = append(user.Subscriptions, e.IDs...)
+		err = s.UserUpsert(user)
+		if err != nil {
+			fmt.Println(err)
+		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		json.NewEncoder(w).Encode(http.StatusOK)
+
 	}
 }
 
-func (s *Server) SubscriptionGet() func(http.ResponseWriter, *http.Request) {
+func (s *Server) HandleSubscriptionGet() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		e, err := NewUserEvent(r.Body)
+		e, err := NewSubscriptionEvent(r.Body)
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		user, err := s.UserGet(e.ID)
+		sub, err := s.SubscriptionsGet(e.IDs)
 		if err != nil {
 			fmt.Println(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		json.NewEncoder(w).Encode(user.Subscriptions)
+		json.NewEncoder(w).Encode(sub)
 
 	}
 }
 
-func (s *Server) ReadingListGet() func(http.ResponseWriter, *http.Request) {
+func (s *Server) HandleReadingListGet() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		e, err := NewUserEvent(r.Body)
@@ -98,7 +100,7 @@ func (s *Server) ReadingListGet() func(http.ResponseWriter, *http.Request) {
 	}
 }
 
-func (s *Server) ArticleRead() func(http.ResponseWriter, *http.Request) {
+func (s *Server) HandleArticleRead() func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		e, err := NewArticleEvent(r.Body)
@@ -106,7 +108,7 @@ func (s *Server) ArticleRead() func(http.ResponseWriter, *http.Request) {
 			fmt.Println(err)
 		}
 
-		user, err := s.UserGet(e.UserID)
+		_, err = s.UserGet(e.UserID)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -134,9 +136,6 @@ func (s *Server) ArticleRead() func(http.ResponseWriter, *http.Request) {
 		json.NewEncoder(w).Encode(article.Content)
 
 		article.IsRead = true
-		user.RefreshReadingList()
-		s.UserUpdate(user)
 
 	}
-
 }

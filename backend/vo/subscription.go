@@ -30,9 +30,8 @@ func NewSubscription(url string, title string) (Subscription, error) {
 
 	s, err := NewSubscriptionFromJSON(feed.JSON)
 
-	// Working Here
-
 	// Fill in Missing Data
+
 	if s.Title != "" {
 		s.Title = title
 	}
@@ -47,6 +46,7 @@ func NewSubscription(url string, title string) (Subscription, error) {
 	}
 
 	// Fill in Article Data from Parent
+
 	for i, a := range s.Articles {
 		a.Parent = s.Title
 		a.Icon = s.Icon

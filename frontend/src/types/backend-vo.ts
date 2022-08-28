@@ -17,6 +17,23 @@ export interface Article {
 }
 
 //////////
+// source: events.go
+
+export interface UserEvent {
+  id: string;
+}
+export interface SubscriptionEvent {
+  id: string[];
+  title: string;
+  url: string;
+  userId: string;
+}
+export interface ArticleEvent {
+  url: string;
+  userId: string;
+}
+
+//////////
 // source: subscription.go
 
 export interface Subscription {
@@ -35,7 +52,7 @@ export interface Subscription {
 
 export interface User {
   id: string;
-  subscriptions: Subscription[];
-  readingList: Article[];
+  subscriptions: string[];
+  readingList: string[];
   lastUpdated: string;
 }

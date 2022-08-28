@@ -1,4 +1,4 @@
-package module
+package vo
 
 import (
 	"encoding/json"
@@ -10,19 +10,19 @@ type UserEvent struct {
 }
 
 func NewUserEvent(body io.ReadCloser) (UserEvent, error) {
-		var e UserEvent
-		err := json.NewDecoder(body).Decode(&e)
-		if err != nil {
-			return e, err
-		}
-		return e, nil
+	var e UserEvent
+	err := json.NewDecoder(body).Decode(&e)
+	if err != nil {
+		return e, err
+	}
+	return e, nil
 }
 
 type SubscriptionEvent struct {
-	ID     string `json:"id"`
-	Title  string `json:"title"`
-	URL    string `json:"url"`
-	UserID string `json:"userId"`
+	IDs    []string `json:"id"`
+	Title  string   `json:"title"`
+	URL    string   `json:"url"`
+	UserID string   `json:"userId"`
 }
 
 func NewSubscriptionEvent(body io.ReadCloser) (SubscriptionEvent, error) {
@@ -35,7 +35,7 @@ func NewSubscriptionEvent(body io.ReadCloser) (SubscriptionEvent, error) {
 }
 
 type ArticleEvent struct {
-	URL string `json:"url"`
+	URL    string `json:"url"`
 	UserID string `json:"userId"`
 }
 

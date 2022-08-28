@@ -1,6 +1,8 @@
 package vo
 
 import (
+	"encoding/json"
+
 	md "github.com/JohannesKaufmann/html-to-markdown"
 	"github.com/knightspore/rss-reader-app/backend/util"
 )
@@ -15,10 +17,19 @@ type Article struct {
 	URL         string `xml:"link" json:"url"`
 	IsRead      bool   `json:"read"`
 	Parent      string `json:"parent"`
-	Icon 			string `json:"icon"`
+	Icon        string `json:"icon"`
 }
 
-func (a *Article) Get() (string, error) {
+func NewArticleFromJSON(j []byte) (Article, error) {
+	var a Article
+	err := json.Unmarshal(j, &a)
+	if err != nil {
+		return a, err
+	}
+	return a, nil
+}
+
+func (a *Article) Read() (string, error) {
 
 	if a.Content != "" {
 		return a.Content, nil
@@ -29,15 +40,7 @@ func (a *Article) Get() (string, error) {
 		return "", err
 	}
 
-	return string(data), nil
-}
-
-func (a *Article) Read() (string, error) {
-
-	data, err := a.Get()
-	if err != nil {
-		return "", err
-	}
+	// TODO: LCA for Body
 
 	converter := md.NewConverter("", true, nil)
 	markdown, err := converter.ConvertString(string(data))
@@ -46,4 +49,5 @@ func (a *Article) Read() (string, error) {
 	}
 
 	return markdown, err
+
 }

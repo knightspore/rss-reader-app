@@ -7,7 +7,7 @@ export interface UserEvent {
   id: string;
 }
 export interface SubscriptionEvent {
-  id: string;
+  id: string[];
   title: string;
   url: string;
   userId: string;
