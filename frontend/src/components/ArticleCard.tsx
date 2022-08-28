@@ -5,7 +5,7 @@ export default function ArticleCard({
   article,
   setFocus,
 }: {
-  article: Article; 
+  article: Article;
   setFocus: Function;
 }) {
   const handleClick = () => {

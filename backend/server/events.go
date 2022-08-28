@@ -19,10 +19,10 @@ func NewUserEvent(body io.ReadCloser) (UserEvent, error) {
 }
 
 type SubscriptionEvent struct {
-	ID     string `json:"id"`
-	Title  string `json:"title"`
-	URL    string `json:"url"`
-	UserID string `json:"userId"`
+	ID     string `json:"id,omitempty"`
+	Title  string `json:"title,omitempty"`
+	URL    string `json:"url,omitempty"`
+	UserID string `json:"userId,omitempty"`
 }
 
 func NewSubscriptionEvents(body io.ReadCloser) ([]SubscriptionEvent, error) {
@@ -35,10 +35,10 @@ func NewSubscriptionEvents(body io.ReadCloser) ([]SubscriptionEvent, error) {
 }
 
 type ArticleEvent struct {
-	ID       string `json:"id"`
-	URL      string `json:"url"`
-	UserID   string `json:"userId"`
-	ParentID string `json:"parent"`
+	ID       string `json:"id,omitempty"`
+	URL      string `json:"url,omitempty"`
+	UserID   string `json:"userId,omitempty"`
+	ParentID string `json:"parent,omitempty"`
 }
 
 func NewArticleEvent(body io.ReadCloser) (ArticleEvent, error) {

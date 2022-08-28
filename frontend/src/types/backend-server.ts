@@ -7,16 +7,16 @@ export interface UserEvent {
   id: string;
 }
 export interface SubscriptionEvent {
-  id: string;
-  title: string;
-  url: string;
-  userId: string;
+  id?: string;
+  title?: string;
+  url?: string;
+  userId?: string;
 }
 export interface ArticleEvent {
-  id: string;
-  url: string;
-  userId: string;
-  parent: string;
+  id?: string;
+  url?: string;
+  userId?: string;
+  parent?: string;
 }
 
 //////////

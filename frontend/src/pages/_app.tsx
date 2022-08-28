@@ -3,6 +3,8 @@ import type { AppProps } from "next/app";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Head from "next/head";
+import UserContextProvider from "../components/context/UserProvider";
+import SubscriptionContextProvider from "../components/context/SubscriptionProvider";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   const [queryClient] = useState(() => new QueryClient());
@@ -18,7 +20,11 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
         />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <UserContextProvider>
+          <SubscriptionContextProvider>
+            <Component {...pageProps} />
+          </SubscriptionContextProvider>
+        </UserContextProvider>
       </QueryClientProvider>
     </>
   );

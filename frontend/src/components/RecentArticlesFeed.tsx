@@ -1,7 +1,7 @@
 import Error from "next/error";
 import { useQuery } from "react-query";
-import { fetchReadingList } from "../lib/queries";
-import { UserEvent } from "../types/backend-module";
+import { fetchReadingList } from "../lib/fetch";
+import { UserEvent } from "../types/backend-server";
 import { Article } from "../types/backend-vo";
 import ArticleCard from "./ArticleCard";
 
@@ -10,9 +10,9 @@ export default function RecentArticlesFeed({
   filters,
 }: {
   setFocus: Function;
-  filters: [string]|[]
+  filters: [string] | [];
 }) {
-  const e: UserEvent = { id: "parabyl" };
+  const e: UserEvent[] = [{ id: "parabyl" }];
   const { isLoading, error, data } = useQuery(
     ["readingList"],
     () => fetchReadingList(e),

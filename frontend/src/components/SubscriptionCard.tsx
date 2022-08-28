@@ -8,7 +8,7 @@ export default function SubscriptionCard({
   setFilters,
 }: {
   sub: Subscription;
-  filters: [] | [string];
+  filters: [] | string[];
   setFilters: any;
 }) {
   const [active, setActive] = useState(true);
@@ -24,9 +24,9 @@ export default function SubscriptionCard({
   const handleClick = () => {
     if (active) {
       if (filters.length === 0) {
-        setFilters([sub.title])
+        setFilters([sub.title]);
       } else {
-      setFilters([sub.title, ...filters]);
+        setFilters([sub.title, ...filters]);
       }
     } else if (!active) {
       setFilters(
