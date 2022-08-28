@@ -2,9 +2,9 @@ import {
   ArticleEvent,
   SubscriptionEvent,
   UserEvent,
-} from "../types/backend-module";
+} from "../types/backend-server";
 
-const baseUrl = "172.17.0.2";
+const baseUrl = "127.0.0.1";
 const port = "1337";
 
 export const fetchReadingList = async (event: UserEvent) => {
@@ -23,7 +23,7 @@ export const createSubscription = async (event: SubscriptionEvent) => {
   return res.json();
 };
 
-export const fetchSubscription = async (event: UserEvent) => {
+export const fetchSubscription = async (event: SubscriptionEvent) => {
   const res = await fetch(`http://${baseUrl}:${port}/api/subscription/get`, {
     method: "POST",
     body: JSON.stringify(event),
@@ -33,6 +33,14 @@ export const fetchSubscription = async (event: UserEvent) => {
 
 export const readArticle = async (event: ArticleEvent) => {
   const res = await fetch(`http://${baseUrl}:${port}/api/article/read`, {
+    method: "POST",
+    body: JSON.stringify(event),
+  });
+  return res.json();
+};
+
+export const fetchUser = async (event: UserEvent) => {
+  const res = await fetch(`http://${baseUrl}:${port}/api/user/get`, {
     method: "POST",
     body: JSON.stringify(event),
   });

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/araddon/dateparse"
@@ -61,7 +62,7 @@ func NewSubscription(url string, title string) (Subscription, []Article, error) 
 
 		t, err := dateparse.ParseAny(a.PubDate)
 		if err != nil {
-			fmt.Printf("Error Parsing Time: %s / %s\n", a.Title, a.Parent)
+			log.Printf("Error Parsing Time: %q - %q\n", a.Title, a.Parent)
 		}
 
 		ts := t.Unix()

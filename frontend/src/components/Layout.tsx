@@ -13,6 +13,7 @@ export default function Layout({
   text: string | null;
   closeArticle: Function;
 }) {
+
   const [showSubs, setShowSubs] = useState(true);
 
   return (
@@ -23,8 +24,8 @@ export default function Layout({
         </div>
         <AddSubscriptionForm />
       </header>
-      <div className="flex-initial grid grid-cols-1 md:grid-cols-8 overflow-clip">
-        <section className="p-2 col-span-2">
+      <div className="grid flex-initial grid-cols-1 md:grid-cols-8 overflow-clip">
+        <section className="col-span-2 p-2">
           <h2
             onClick={() => setShowSubs(!showSubs)}
             className="mb-2 font-medium select-none text-md"

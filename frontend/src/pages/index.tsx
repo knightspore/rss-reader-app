@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import Layout from "../components/Layout";
 import RecentArticlesFeed from "../components/RecentArticlesFeed";
 import SubscriptionsList from "../components/SubscriptionsList";
-import { readArticle } from "../lib/queries";
-import { ArticleEvent } from "../types/backend-module";
+import { fetchUser, readArticle } from "../lib/queries";
+import { ArticleEvent } from "../types/backend-server";
+import { UserEvent } from "../types/backend-server";
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -17,12 +19,14 @@ const Home: NextPage = () => {
       if (!text) {
         setLoading(true);
       }
-      const e: ArticleEvent = {
+      const ae: ArticleEvent = {
         userId: "parabyl",
         url: focus,
+        id: "",
+        parent: "",
       };
 
-      readArticle(e).then((text) => {
+      readArticle(ae).then((text) => {
         setText(text);
         setLoading(false);
       });
@@ -40,9 +44,35 @@ const Home: NextPage = () => {
     setText(null);
   }
 
-  return (
+  const e: UserEvent = {id: "parabyl"};
+
+  const { isLoading, error, data } = useQuery(
+    ["user"],
+    () => fetchUser(e),
+    {
+      notifyOnChangeProps: ['data', 'error']
+    }
+  )
+
+  if (isLoading || !data) {
     <Layout
-      subscriptions={<SubscriptionsList {...{ filters, setFilters }} />}
+      subscriptions={"Loading..."}
+      articles={"Loading..."}
+      {...{ closeArticle, text }}
+    />
+  }
+
+  if (error) {
+    <Layout
+      subscriptions={"Server Error"}
+      articles={"Server Error"}
+      {...{ closeArticle, text }}
+    />
+  }
+
+  return data && (
+    <Layout
+      subscriptions={<SubscriptionsList subscriptions={data.subscriptions} {...{ filters, setFilters }} />}
       articles={<RecentArticlesFeed {...{ setFocus, filters }} />}
       {...{ closeArticle, text }}
     />

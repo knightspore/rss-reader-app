@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Subscription } from "../types/backend-vo";
 import Icon from "./Icon";
 
@@ -8,8 +8,8 @@ export default function SubscriptionCard({
   setFilters,
 }: {
   sub: Subscription;
-  filters: [any];
-  setFilters: Function;
+  filters: [] | [string];
+  setFilters: any;
 }) {
   const [active, setActive] = useState(true);
 
@@ -23,7 +23,11 @@ export default function SubscriptionCard({
 
   const handleClick = () => {
     if (active) {
-      setFilters((f: [any]) => [sub.title, ...f]);
+      if (filters.length === 0) {
+        setFilters([sub.title])
+      } else {
+      setFilters([sub.title, ...filters]);
+      }
     } else if (!active) {
       setFilters(
         filters.map((f) => {
@@ -32,7 +36,6 @@ export default function SubscriptionCard({
       );
     }
   };
-
   return (
     <div className="flex cursor-pointer" onClick={handleClick}>
       <span
