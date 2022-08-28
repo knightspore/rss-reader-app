@@ -1,7 +1,6 @@
 package module
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -30,7 +29,7 @@ func NewServer() *Server {
 
 	err := s.ConnectDatabase()
 	if err != nil {
-		fmt.Println(err)
+		log.Panic(err)
 	}
 
 	return s

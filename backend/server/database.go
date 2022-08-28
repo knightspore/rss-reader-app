@@ -8,6 +8,7 @@ import (
 )
 
 func (s *Server) Get(c string, id string) (*gocb.GetResult, error) {
+	log.Printf("Database: Get '%s/%s'", c, id)
 	col := s.DB.Collection(c)
 	result, err := col.Get(id, nil)
 	if err != nil {
@@ -17,6 +18,7 @@ func (s *Server) Get(c string, id string) (*gocb.GetResult, error) {
 }
 
 func(s *Server) Upsert(c string, id string, val interface{}) error {
+	log.Printf("Database: Upsert '%s/%s'", c, id)
 		col := s.DB.Collection(c)
 		_, err := col.Upsert(id, val, nil)
 		if err != nil {

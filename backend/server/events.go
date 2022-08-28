@@ -25,8 +25,8 @@ type SubscriptionEvent struct {
 	UserID string `json:"userId"`
 }
 
-func NewSubscriptionEvent(body io.ReadCloser) (SubscriptionEvent, error) {
-	var e SubscriptionEvent
+func NewSubscriptionEvents(body io.ReadCloser) ([]SubscriptionEvent, error) {
+	var e []SubscriptionEvent
 	err := json.NewDecoder(body).Decode(&e)
 	if err != nil {
 		return e, err

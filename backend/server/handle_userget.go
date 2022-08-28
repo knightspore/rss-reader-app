@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -14,7 +13,7 @@ func (s *Server) HandleUserGet() Handler {
 
 		e, err := NewUserEvent(r.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 		log.Printf("Get User: %q", e.ID)
 
@@ -22,12 +21,12 @@ func (s *Server) HandleUserGet() Handler {
 
 		res, err := s.Get("users", e.ID)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		err = res.Content(&u)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")

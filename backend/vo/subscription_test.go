@@ -1,7 +1,7 @@
 package vo_test
 
 import (
-	"fmt"
+	"log"
 	"testing"
 
 	"github.com/knightspore/rss-reader-app/backend/vo"
@@ -14,7 +14,7 @@ func TestNewSubscription(t *testing.T) {
 	}
 
 	if len(arts) == 0 || s.Title == "" {
-		fmt.Println(err)
+		log.Panic(err)
 	}
 
 	s, arts, err = vo.NewSubscription("https://www.groundup.org.za/sitenews/atom/", "Atom Test")
@@ -23,6 +23,6 @@ func TestNewSubscription(t *testing.T) {
 	}
 
 	if len(arts) == 0 || s.Title == "" {
-		fmt.Println(err)
+		log.Panic(err)
 	}
 }

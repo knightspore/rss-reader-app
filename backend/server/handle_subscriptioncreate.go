@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -12,51 +11,61 @@ import (
 func (s *Server) HandleSubscriptionCreate() Handler {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		e, err := NewSubscriptionEvent(r.Body)
-		if err != nil {
-			fmt.Println(err)
-		}
-		log.Printf("Create Subscription: %q (User: %q)", e.ID, e.UserID)
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		json.NewEncoder(w).Encode(http.StatusOK)
 
-		sub, arts, err := vo.NewSubscription(e.URL, e.Title)
+		events, err := NewSubscriptionEvents(r.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
-		err = s.Upsert("subscriptions", e.ID, sub)
-		if err != nil {
-			fmt.Println(err)
-		}
+		var toAdd []string
 
-		for _, a := range(arts) {
-			err = s.Upsert("articles", a.ID, a)
+		for _, e := range events {
+
+			log.Printf("Create Subscription: %q (User: %q)", e.ID, e.UserID)
+
+			sub, arts, err := vo.NewSubscription(e.URL, e.Title)
 			if err != nil {
-				fmt.Println(err)
+				log.Panic(err)
 			}
+
+			err = s.Upsert("subscriptions", sub.ID, sub)
+			if err != nil {
+				log.Panic(err)
+			}
+
+			for _, a := range arts {
+				err = s.Upsert("articles", a.ID, a)
+				if err != nil {
+					log.Panic(err)
+				}
+			}
+
+			toAdd = append(toAdd, sub.ID)
+
 		}
 
 		var u vo.User
 
-		res, err := s.Get("users", e.UserID)
+		res, err := s.Get("users", events[0].UserID)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		err = res.Content(&u)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
-		u.Subscriptions = append(u.Subscriptions, sub.ID)
+		u.Subscriptions = append(u.Subscriptions, toAdd...)
 
 		err = s.Upsert("users", u.ID, u)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		json.NewEncoder(w).Encode(http.StatusOK)
 
 	}
 }

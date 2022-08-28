@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -12,7 +11,7 @@ func (s *Server) HandleArticleCreate() Handler {
 
 		e, err := NewArticleEvent(r.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 		log.Printf("Create Article: %q - %q (User: %q)", e.URL, e.ParentID, e.UserID)
 		log.Printf(">> Not Working Currently")

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -21,7 +21,7 @@ func NewServer() *Server {
 	s.Router = mux.NewRouter()
 	err := s.ConnectDatabase()
 	if err != nil {
-		fmt.Println(err)
+		log.Panic(err)
 	}
 	return s
 }

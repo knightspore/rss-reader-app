@@ -2,7 +2,7 @@ package module
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/knightspore/rss-reader-app/backend/vo"
@@ -13,14 +13,14 @@ func (s *Server) HandleUserCreate() func(http.ResponseWriter, *http.Request) {
 
 		e, err := NewUserEvent(r.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		user := vo.NewUser(e.ID)
 
 		err = s.UserUpsert(user)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -35,22 +35,22 @@ func (s *Server) HandleSubscriptionCreate() func(http.ResponseWriter, *http.Requ
 
 		e, err := NewSubscriptionEvent(r.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		err = s.SubscriptionCreate(e.URL, e.Title)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		user, err := s.UserGet(e.UserID)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 		user.Subscriptions = append(user.Subscriptions, e.IDs...)
 		err = s.UserUpsert(user)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -65,12 +65,12 @@ func (s *Server) HandleSubscriptionGet() func(http.ResponseWriter, *http.Request
 
 		e, err := NewSubscriptionEvent(r.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		sub, err := s.SubscriptionsGet(e.IDs)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -85,12 +85,12 @@ func (s *Server) HandleReadingListGet() func(http.ResponseWriter, *http.Request)
 
 		e, err := NewUserEvent(r.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		user, err := s.UserGet(e.ID)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -105,18 +105,18 @@ func (s *Server) HandleArticleRead() func(http.ResponseWriter, *http.Request) {
 
 		e, err := NewArticleEvent(r.Body)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		_, err = s.UserGet(e.UserID)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		// GetArticle Not Currently Working
 		// article, err := user.GetArticle(e.URL)
 		// if err != nil {
-		// 	fmt.Println(err)
+		// 	log.Panic(err)
 		// }
 
 		// Workaround
@@ -126,7 +126,7 @@ func (s *Server) HandleArticleRead() func(http.ResponseWriter, *http.Request) {
 
 		md, err := article.Read()
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 
 		article.Content = md
