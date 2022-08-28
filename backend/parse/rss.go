@@ -12,7 +12,7 @@ type RSSFeed struct {
 	LastUpdated string    `xml:"channel>updated" json:"lastUpdated"`
 	Muted       bool      `json:"muted"`
 	Icon        string    `json:"icon"`
-	Articles    []RSSItem `xml:"channel>item" json:"articles"`
+	Articles    []RSSItem `xml:"channel>item" json:"articleList"`
 }
 
 type RSSItem struct {

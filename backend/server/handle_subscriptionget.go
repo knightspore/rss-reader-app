@@ -9,24 +9,30 @@ import (
 	"github.com/knightspore/rss-reader-app/backend/vo"
 )
 
-func (s *Server) HandleUserCreate() Handler {
+func (s *Server) HandleSubscriptionGet() Handler {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		e, err := NewUserEvent(r.Body)
+		e, err := NewSubscriptionEvent(r.Body)
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Printf("Create User: %q", e.ID)
+		log.Printf("Get Subscription: %q", e.ID)
 
-		user := vo.NewUser(e.ID)
-		err = s.Upsert("users", user.ID, user)
+		var sub vo.Subscription
+
+		res, err := s.Get("subscriptions", e.ID)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		err = res.Content(&sub)
 		if err != nil {
 			fmt.Println(err)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		json.NewEncoder(w).Encode(http.StatusOK)
+		json.NewEncoder(w).Encode(sub)
 
 	}
 }

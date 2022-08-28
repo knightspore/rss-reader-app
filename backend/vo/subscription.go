@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"strconv"
 
 	"github.com/araddon/dateparse"
 	"github.com/knightspore/rss-reader-app/backend/parse"
 	"github.com/knightspore/rss-reader-app/backend/util"
+	"github.com/segmentio/fasthash/fnv1a"
 )
 
 type Subscription struct {
@@ -18,60 +20,73 @@ type Subscription struct {
 	LastUpdated string    `xml:"channel>updated" json:"lastUpdated"`
 	Muted       bool      `json:"muted"`
 	Icon        string    `json:"icon"`
-	Articles    []Article `xml:"channel>item" json:"articles"`
+	Articles    []string `json:"articles"`
 }
 
-func NewSubscription(url string, title string) (Subscription, error) {
+type SubscriptionArticles struct {
+	Items []Article `xml:"channel>item" json:"articleList"`
+}
+
+func NewSubscription(url string, title string) (Subscription, []Article, error) {
 
 	feed, err := parse.NewFeed(url)
 	if err != nil {
-		return Subscription{}, err
+		return Subscription{}, []Article{}, err
 	}
 
-	s, err := NewSubscriptionFromJSON(feed.JSON)
+	sub, arts, err := NewSubscriptionFromJSON(feed.JSON)
 
-	// Fill in Missing Data
+	// Fill in Missing Sub Data
+	if sub.Title != "" {
+		sub.Title = title
+	}
+	if len(sub.ID) == 0 {
+		sub.ID = url
+	}
+	if len(sub.URL) == 0 {
+		sub.URL = url
+	}
+	if len(sub.Icon) == 0 {
+		sub.Icon = "https://www.google.com/s2/favicons?domain=" + sub.URL + "&sz=48"
+	}
 
-	if s.Title != "" {
-		s.Title = title
-	}
-	if len(s.ID) == 0 {
-		s.ID = url
-	}
-	if len(s.URL) == 0 {
-		s.URL = url
-	}
-	if len(s.Icon) == 0 {
-		s.Icon = "https://www.google.com/s2/favicons?domain=" + s.URL + "&sz=48"
-	}
+	var populated []Article
 
-	// Fill in Article Data from Parent
+	// Handle Articles
+	for _, a := range arts.Items {
+		a.Parent, a.ParentID, a.Icon = sub.Title, sub.ID, sub.Icon
 
-	for i, a := range s.Articles {
-		a.Parent = s.Title
-		a.Icon = s.Icon
+		h := fnv1a.HashString32(sub.URL+a.Title)
+		a.ID = strconv.FormatUint(uint64(h), 10)
+
 		t, err := dateparse.ParseAny(a.PubDate)
 		if err != nil {
-			fmt.Printf("Error Parsing Time: %s / %s", a.Title, a.Parent)
+			fmt.Printf("Error Parsing Time: %s / %s\n", a.Title, a.Parent)
 		}
 
 		ts := t.Unix()
 		a.PubEpoch = ts
 
-		s.Articles[i] = a
+		sub.Articles = append(sub.Articles, a.ID)
+		populated = append(populated, a)
 	}
 
-	return s, err
+	return sub, populated, err
 
 }
 
-func NewSubscriptionFromJSON(j []byte) (Subscription, error) {
+func NewSubscriptionFromJSON(j []byte) (Subscription, SubscriptionArticles, error) {
 	var s Subscription
+	var a SubscriptionArticles
 	err := json.Unmarshal(j, &s)
 	if err != nil {
-		return s, err
+		return s, a, err
 	}
-	return s, nil
+	err = json.Unmarshal(j, &a)
+	if err != nil {
+		return s, a, err
+	}
+	return s, a, nil
 }
 
 func (s *Subscription) LatestArticles() *[]Article {

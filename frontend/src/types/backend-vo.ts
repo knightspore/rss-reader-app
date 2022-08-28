@@ -13,24 +13,8 @@ export interface Article {
   url: string;
   read: boolean;
   parent: string;
+  parentId: string;
   icon: string;
-}
-
-//////////
-// source: events.go
-
-export interface UserEvent {
-  id: string;
-}
-export interface SubscriptionEvent {
-  id: string[];
-  title: string;
-  url: string;
-  userId: string;
-}
-export interface ArticleEvent {
-  url: string;
-  userId: string;
 }
 
 //////////
@@ -44,7 +28,10 @@ export interface Subscription {
   lastUpdated: string;
   muted: boolean;
   icon: string;
-  articles: Article[];
+  articles: string[];
+}
+export interface SubscriptionArticles {
+  articleList: Article[];
 }
 
 //////////

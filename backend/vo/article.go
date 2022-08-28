@@ -17,6 +17,7 @@ type Article struct {
 	URL         string `xml:"link" json:"url"`
 	IsRead      bool   `json:"read"`
 	Parent      string `json:"parent"`
+	ParentID    string `json:"parentId"`
 	Icon        string `json:"icon"`
 }
 

@@ -7,6 +7,7 @@ require (
 	github.com/araddon/dateparse v0.0.0-20210429162001-6b43995a97de
 	github.com/couchbase/gocb/v2 v2.5.2
 	github.com/gorilla/mux v1.8.0
+	github.com/segmentio/fasthash v1.0.3
 )
 
 require (

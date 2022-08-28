@@ -15,7 +15,7 @@ func TestCreateRSSFeedSubscription(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	s, err := vo.NewSubscriptionFromJSON(rss.JSON)
+	s, _, err := vo.NewSubscriptionFromJSON(rss.JSON)
 	if err != nil {
 		t.Fatalf("Error in vo.Subscription: %+v", err)
 	}
@@ -41,7 +41,7 @@ func TestCreateAtomFeedSubscription(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	s, err := vo.NewSubscriptionFromJSON(atom.JSON)
+	s, _, err := vo.NewSubscriptionFromJSON(atom.JSON)
 	if err != nil {
 		t.Fatalf("Err")
 	}

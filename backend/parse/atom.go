@@ -12,7 +12,7 @@ type AtomFeed struct {
 	LastUpdated string    `xml:"updated" json:"lastUpdated"`
 	Muted       bool      `json:"muted"`
 	Icon        string    `json:"icon"`
-	Articles    []AtomEntry `xml:"entry" json:"articles"`
+	Articles    []AtomEntry `xml:"entry" json:"articleList"`
 }
 
 type AtomEntry struct {

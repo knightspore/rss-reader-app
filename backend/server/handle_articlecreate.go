@@ -5,25 +5,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/knightspore/rss-reader-app/backend/vo"
 )
 
-func (s *Server) HandleUserCreate() Handler {
+func (s *Server) HandleArticleCreate() Handler {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		e, err := NewUserEvent(r.Body)
+		e, err := NewArticleEvent(r.Body)
 		if err != nil {
 			fmt.Println(err)
 		}
-		log.Printf("Create User: %q", e.ID)
+		log.Printf("Create Article: %q - %q (User: %q)", e.URL, e.ParentID, e.UserID)
+		log.Printf(">> Not Working Currently")
 
-		user := vo.NewUser(e.ID)
-		err = s.Upsert("users", user.ID, user)
-		if err != nil {
-			fmt.Println(err)
-		}
-
+		// TODO: Add NewArticle Code and Complete
+	
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		json.NewEncoder(w).Encode(http.StatusOK)
